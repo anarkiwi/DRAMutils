@@ -1,6 +1,9 @@
 #include "DRAMutils.h"
 #include <Arduino.h>  // Includes necessary C and Arduino-specific libraries
 
+#define DATA_WRITE(x)  digitalWrite(9, x);
+#define DATA_READ()   digitalRead(10);
+
 /*
  * Macros to control Row Address Strobe (RAS) signals
  */
@@ -62,13 +65,12 @@ void DRAM_write(mem_addr addr, bool data)
 
   set_addr(addr.col);     //set desired column address out on pins
 
-  digitalWrite(9, data);  //Data sent to D_in on chip through Digital pin 9
+  DATA_WRITE(data);  //Data sent to D_in on chip through Digital pin 9
 
   CAS_LOW();              //CAS set LOW
 
   RAS_HIGH();             //RAS is set back to HIGH
   CAS_HIGH();             //CAS is set back to HIGH
-
 }
 
 /*
@@ -90,12 +92,12 @@ bool DRAM_read(mem_addr addr)
 
   CAS_LOW();              //CAS set LOW
 
-  return digitalRead(10); //Data on D_out of DRAM chip returned by DigitalRead()
+  bool data = DATA_READ(); //Data on D_out of DRAM chip returned by DigitalRead()
 
   RAS_HIGH();             //RAS is set back to HIGH
   CAS_HIGH();             //CAS is set back to HIGH
 
-
+  return data;
 }
 
 /*
@@ -130,14 +132,15 @@ void DRAM_refresh(mem_addr addr)
 
   CAS_LOW();              //CAS set LOW
 
-  digitalWrite(9, data);  //Data sent to D_in on chip through Digital pin 9
+  DATA_WRITE(data);  //Data sent to D_in on chip through Digital pin 9
 
   WE_LOW();               //WE set LOW
   WE_HIGH();              //WE set back HIGH
 
-  return digitalRead(10); //Data read from D_out on chip through Digital pin 10
+  bool newdata = DATA_READ(); //Data read from D_out on chip through Digital pin 10
 
   RAS_HIGH();             //RAS set back HIGH
   CAS_HIGH();             //CAS set back HIGH 
 
+  return newdata;
 }
