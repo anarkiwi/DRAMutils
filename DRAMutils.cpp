@@ -3,10 +3,11 @@
 #include <FastGPIO.h>
 
 FastGPIO::Pin<9> di_pin;
+FastGPIO::Pin<10> do_pin;
 
 
 #define DATA_WRITE(x)  di_pin.setOutputValue(x);
-#define DATA_READ()   digitalRead(10);
+#define DATA_READ()   do_pin.isInputHigh();
 
 /*
  * Macros to control Row Address Strobe (RAS) signals
