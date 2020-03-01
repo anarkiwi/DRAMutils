@@ -1,7 +1,11 @@
 #include "DRAMutils.h"
 #include <Arduino.h>  // Includes necessary C and Arduino-specific libraries
+#include <FastGPIO.h>
 
-#define DATA_WRITE(x)  digitalWrite(9, x);
+FastGPIO::Pin<9> di_pin;
+
+
+#define DATA_WRITE(x)  di_pin.setOutputValue(x);
 #define DATA_READ()   digitalRead(10);
 
 /*
